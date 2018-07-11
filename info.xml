@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <extension key="biz.jmaconsulting.cdntaxreceiptsdashboard" type="module">
   <file>cdntaxreceiptsdashboard</file>
-  <name>FIXME</name>
-  <description>FIXME</description>
+  <name>CDN Tax Receipts dashboard</name>
+  <description>This extension provides functionality of issuing/re-issuing Canadian Tax Receipts for contributions from the user dashboard.</description>
   <license>AGPL-3.0</license>
   <maintainer>
-    <author>Edsel</author>
-    <email>edsel.lopez@jmaconsulting.biz</email>
+    <author>JMA Consulting</author>
+    <email>support@jmaconsulting.biz</email>
   </maintainer>
   <urls>
     <url desc="Main Extension Page">http://FIXME</url>
@@ -18,10 +18,10 @@
   <version>1.0</version>
   <develStage>alpha</develStage>
   <compatibility>
-    <ver>4.2</ver>
+    <ver>5.0</ver>
   </compatibility>
   <comments>This is a new, undeveloped module</comments>
   <civix>
-    <namespace>CRM/Cdntaxreceiptsdashboard</namespace>
+    <namespace>CRM/CDN</namespace>
   </civix>
 </extension>

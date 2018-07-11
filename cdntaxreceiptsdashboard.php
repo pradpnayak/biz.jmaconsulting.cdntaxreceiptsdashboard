@@ -163,63 +163,29 @@ function cdntaxreceiptsdashboard_civicrm_searchColumns($objectName, &$headers,  
     return;
   }
 
-  if ($objectName == 'contribution') {
+  if ($objectName == 'contribution' && CRM_Core_Smarty::singleton()->get_template_vars('context') == 'user') {
     foreach ($values as &$contribution) {
       list($issuedOn, $receiptId) = cdntaxreceipts_issued_on($contribution['contribution_id']);
-      if (isset($receiptId)) {
-        $existingReceipt = cdntaxreceipts_load_receipt($receiptId);
-        $receipt = $existingReceipt;
-        $reissue = 1;
-      }
-      else {
-        $receipt = array();
-        $reissue = 0;
-      }
-
-      // make tax receipt available for download, or do not display link if ineligible
-      if (cdntaxreceipts_eligibleForReceipt($contribution['contribution_id'])) {
-        $contribObject = (object)$contribution;
-        $contribObject->id = $contribution['contribution_id'];
-        list($result, $method, $pdf) = cdntaxreceipts_issueTaxReceipt($contribObject);
-        sendFile($contribution['contribution_id'], $contribution['contact_id'], $pdf);
-
-        // Make links
-        $headers[6] = array(
-          'name' => ts('Tax Receipt'),
-          'sort' => 'tax_receipt',
-          'field_name' => 'tax_receipt',
-          'direction' => 4,
-          'weight' => 60,
-        );
-
-        if ($reissue) {
-          $values; // FIXME
+      $contribId = $contribution['contribution_id'];
+      if (cdntaxreceipts_eligibleForReceipt($contribId)) {
+        if (isset($receiptId)) {
+          $contribution['tax_receipt'] = "<a class='cdn-receipt' data-receiptid='{$receiptId}' data-contributiondid='{$contribId}' href='" . CRM_Utils_System::url('civicrm/generatetaxreceipt', "reset=1") . "'>Re-issue</a>";
+        }
+        else {
+          $receiptId = 0;
+          $contribution['tax_receipt'] = "<a class='cdn-receipt' data-receiptid='{$receiptId}' data-contributiondid='{$contribId}' href='" . CRM_Utils_System::url('civicrm/generatetaxreceipt', "reset=1") . "'>Issue</a>";
         }
       }
     }
-    exit;
   }
 }
- 
-function sendFile($contributionId, $contactId, $filename) {
-  if ($filename && file_exists($filename)) {
-    // set up headers and stream the file
-    header('Content-Description: File Transfer');
-    header('Content-Type: application/octet-stream');
-    header('Content-Disposition: attachment; filename='.basename($filename));
-    header('Content-Transfer-Encoding: binary');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-    header('Content-Length: ' . filesize($filename));
-    ob_clean();
-    flush();
-    readfile($filename);
 
-    CRM_Utils_System::civiExit();
-  }
-  else {
-    $statusMsg = ts('File has expired. Please retrieve receipt from the email archive.', array('domain' => 'biz.jmaconsulting.cdntaxreceiptsdashboard'));
-    CRM_Core_Session::setStatus( $statusMsg, '', 'error' );
+function cdntaxreceiptsdashboard_civicrm_pageRun(&$page) {
+  if (get_class($page) == "CRM_Contact_Page_View_UserDashBoard") {
+    $enabled = checkRelatedExtensions('org.civicrm.cdntaxreceipts');
+    if (!$enabled) {
+      return;
+    }
+    CRM_Core_Resources::singleton()->addScriptFile('biz.jmaconsulting.cdntaxreceiptsdashboard', 'templates/js/cdn.js');
   }
 }

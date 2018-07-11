@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/generatetaxreceipt</path>
+    <page_callback>CRM_CDN_Page_GenerateTaxReceipt</page_callback>
+    <title>GenerateTaxReceipt</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>

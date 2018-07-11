@@ -110,13 +110,13 @@ function _cdntaxreceiptsdashboard_civix_civicrm_upgrade($op, CRM_Queue_Queue $qu
 }
 
 /**
- * @return CRM_Cdntaxreceiptsdashboard_Upgrader
+ * @return CRM_CDN_Upgrader
  */
 function _cdntaxreceiptsdashboard_civix_upgrader() {
-  if (!file_exists(__DIR__.'/CRM/Cdntaxreceiptsdashboard/Upgrader.php')) {
+  if (!file_exists(__DIR__.'/CRM/CDN/Upgrader.php')) {
     return NULL;
   } else {
-    return CRM_Cdntaxreceiptsdashboard_Upgrader_Base::instance();
+    return CRM_CDN_Upgrader_Base::instance();
   }
 }
 
